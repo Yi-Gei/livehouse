@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}HomePage{% endblock %}
+{% block extrastyle %}
+<style>
+   /* CUSTOMIZE THE CAROUSEL
+    -------------------------------------------------- */
+
+    /* Carousel base class */
+    .carousel {
+      margin-bottom: 20px;
+    }
+
+    .carousel .container {
+      position: relative;
+      z-index: 9;
+    }
+
+    .carousel-control {
+      height: 10px;
+      margin-top: 0;
+      font-size: 120px;
+      text-shadow: 0 1px 1px rgba(0,0,0,.4);
+      background-color: transparent;
+      border: 0;
+      z-index: 10;
+    }
+
+    .carousel .item {
+      height: 200px;
+    }
+    .carousel img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      height: 200px;
+    }
+
+    .carousel-caption {
+      background-color: transparent;
+      position: static;
+      max-width: 550px;
+      padding: 0 20px;
+      margin-top: 20px;
+    }
+    .carousel-caption h1,
+    .carousel-caption .lead {
+      margin: 0;
+      line-height: 1.25;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0,0,0,.4);
+    }
+    .carousel-caption .btn {
+      margin-top: 10px;
+    }
+</style>
+{% endblock %}
+{% block nav %}
+<ul class="nav">
+    <li><a href="/">Home</a></li>
+    <li><a href="/teacher">Teacher</a></li>
+    <li class="active"><a href="/course">Course</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<!-- Carousel
+================================================== -->
+{% if render_obj.recommend_course %}
+<div id="myCarousel" class="carousel slide">
+    <div class="carousel-inner">
+    {% for course in render_obj.recommend_course %}
+    <div class="item {% if forloop.first%} active{% endif %}">
+        <img src="static/image/slide-{{forloop.counter}}.jpg" alt="">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>{{course.name}}</h1>
+                    <p class="lead">{{course.description}}</p>
+                    <a class="btn btn-large btn-primary" href="#">Sign up today</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div><!-- /.carousel -->
+{% endif %}
+<div class="container">
+        <div class="span12">
+            {{ render_obj.course.name}}</br>
+            {{ render_obj.course.teacher}}</br>
+            {{ render_obj.course.description}}</br>
+            {{ render_obj.course.startdate}}</br>
+            {{ render_obj.course.enddate}}</br>
+            {{ render_obj.openday}}</br>
+        </div>
+    <div>
+</div>
+
+{% endblock %}

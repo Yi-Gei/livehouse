@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LiveHouse-{% block title %}{% endblock %}</title>
+        <script type="text/javascript" src="/static/jquery/js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" type="text/css">
+        <style>
+            body {
+                padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+            }
+        </style>
+        {% block extrastyle %} {% endblock %}
+        <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-responsive.css" type="text/css">
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $(".loginsubmit").click(function(){
+                    var option={};
+                    option['email'] = $('#textemail').val();
+                    option['pw'] = $("#textpw").val();
+                    option['role'] = $(this).attr('role');
+                    $.post(
+                        '/login',
+                        option,
+                        function(result){
+                            if(result['error_msg']==''){
+                                window.location="/";
+                            }
+                            else{
+                                $("#textpw").css('background-color','pink');
+                            }
+                        },
+                        'json'
+                    );
+                    return false;
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        {{render_obj.login}}
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand">LiveHouse</a>
+                    <div class="nav-collapse collapse">
+                        {% block nav %}
+                        <ul class="nav">
+                            <li class="active"><a href="/">Home</a></li>
+                            <li><a href="/teacher">Teacher</a></li>
+                            <li><a href="/course">Course</a></li>
+                        </ul>
+                        {% endblock %}
+                        {% if render_obj.user %}
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-primary" href="#"><i class="icon-user icon-white"></i> {{render_obj.user}}</a>
+                            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/profile/{{render_obj.user.id}}"><i class="icon-pencil"></i> 编辑</a></li>
+                                <li><a href="/mycourse"><i class="icon-trash"></i> 查看课程</a></li>
+                                {% if render_obj.teacher_none %}
+                                    <li><a href="/setupclass"><i class="icon-trash"></i> 开课</a></li>
+                                {% endif %}
+                                <li class="divider"></li>
+                                <li><a href="/logout"><i class="i"></i> 注销</a></li>
+                            </ul>
+                        </div>
+                        {% else %}
+                        <form class="navbar-form pull-right">
+                            <input id="textemail" class="span2" type="text" placeholder="Email">
+                            <input id="textpw" class="span2" type="password" placeholder="Password">
+                            <button id="btnteacher" type="submit" class="btn loginsubmit" role="teacher">我是老师</button>
+                            <button id="btnstudent" type="submit" class="btn loginsubmit" role="student">我是学生</button>
+                            {% endif %}
+                        </form>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>{% block content %} {% endblock %}
+    </body>
+</html>
